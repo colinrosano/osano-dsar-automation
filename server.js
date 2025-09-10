@@ -21,7 +21,7 @@ app.post("/incoming-webhook", async (req, res) => {
       {
         method: "DELETE",
         headers: {
-          apikey: "sb_secret_ImrpMRw3y8Vu1Gwyx-9Cfg_bq53Yrkv",
+          apikey: "[APIKEYGOESHERE]",
           "Content-Type": "application/json",
         },
       }
