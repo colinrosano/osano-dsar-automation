@@ -10,7 +10,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/incoming-webhook", (req, res) => {
-  console.log("Webhook received:", req.body);
+  console.log("Headers:", req.headers);
+  console.log("Content-Type:", req.headers["content-type"]);
+  console.log("Raw body:", req.body);
+  console.log("Body type:", typeof req.body);
+
   res.status(200).json({ message: "Webhook received successfully" });
 });
 
