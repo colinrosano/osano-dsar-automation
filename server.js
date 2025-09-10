@@ -9,10 +9,36 @@ app.get("/", (req, res) => {
   res.send("Webhook server is running!");
 });
 
-app.post("/incoming-webhook", (req, res) => {
+app.post("/incoming-webhook", async (req, res) => {
   console.log(req.body);
 
-  res.status(200).json({ message: "Webhook received successfully" });
+  const userEmail = req.body.requester.Email;
+
+  try {
+    const response = await fetch(
+      "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
+        userEmail,
+      {
+        method: "DELETE",
+        headers: {
+          apikey: "YOUR_SUPABASE_ANON_KEY",
+          Authorization: "Bearer YOUR_SUPABASE_ANON_KEY",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.ok) {
+      console.log("User deleted successfully");
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      console.log("Delete failed:", response.status);
+      res.status(500).json({ message: "Delete failed" });
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
