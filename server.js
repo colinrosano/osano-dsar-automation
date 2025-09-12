@@ -12,7 +12,8 @@ app.get("/", (req, res) => {
 app.post("/incoming-webhook", async (req, res) => {
   console.log(req.body);
 
-  const userEmail = req.body.requester.Email;
+  const userEmail = req.body.details.email;
+  console.log(userEmail);
 
   // try {
   //   const response = await fetch(
