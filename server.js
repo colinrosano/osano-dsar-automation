@@ -14,8 +14,6 @@ app.post("/incoming-webhook", async (req, res) => {
 
   const userEmail = req.body.details.email;
 
-  res.status(200).end();
-
   try {
     const response = await fetch(
       "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
