@@ -13,34 +13,33 @@ app.post("/incoming-webhook", async (req, res) => {
   console.log(req.body);
 
   const userEmail = req.body.details.email;
-  console.log(userEmail);
 
   res.status(200).end();
 
-  // try {
-  //   const response = await fetch(
-  //     "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
-  //       userEmail,
-  //     {
-  //       method: "DELETE",
-  //       headers: {
-  //         apikey: "[APIKEYGOESHERE]",
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
+  try {
+    const response = await fetch(
+      "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
+        userEmail,
+      {
+        method: "DELETE",
+        headers: {
+          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  //   if (response.ok) {
-  //     console.log("User deleted successfully");
-  //     res.status(200).json({ message: "User deleted successfully" });
-  //   } else {
-  //     console.log("Delete failed:", response.status);
-  //     res.status(500).json({ message: "Delete failed" });
-  //   }
-  // } catch (error) {
-  //   console.log("Error:", error);
-  //   res.status(500).json({ message: "Internal server error" });
-  // }
+    if (response.ok) {
+      console.log("ok");
+      res.status(200).json({ message: "ok" });
+    } else {
+      console.log("Delete failed:", response.status);
+      res.status(500).json({ message: "Delete failed" });
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
