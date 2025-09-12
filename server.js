@@ -23,7 +23,7 @@ app.post("/incoming-webhook", async (req, res) => {
       {
         method: "DELETE",
         headers: {
-          apikey: "sb_secret_ImrpMRw3y8Vu1Gwyx-9Cfg_bq53Yrkv",
+          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
           "Content-Type": "application/json",
         },
       }
