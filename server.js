@@ -54,7 +54,7 @@ app.post("/action-item-update", async (req, res) => {
 
   try {
     const response = await fetch(
-      "https://api.osano.com/v1/subject-rights/requests/" + actionItemId,
+      "https://api.osano.com/v1/subject-rights/action-items/" + actionItemId,
       {
         method: "PATCH",
         headers: {
