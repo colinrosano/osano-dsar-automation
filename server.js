@@ -50,7 +50,7 @@ app.listen(port, () => {
 
 app.post("/action-item-update", async (req, res) => {
   console.log(req.body);
-  const actionItemId = req.body.details.id;
+  const actionItemId = req.body.details.actionItemId;
 
   try {
     const response = await fetch(
@@ -58,7 +58,7 @@ app.post("/action-item-update", async (req, res) => {
       {
         method: "PATCH",
         headers: {
-          osanoApiKey: process.env.x - osano - api - key,
+          "x-osano-api-key": process.env.X_OSANO_API_KEY,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: "COMPLETED" }),
@@ -66,14 +66,14 @@ app.post("/action-item-update", async (req, res) => {
     );
     if (response.ok) {
       console.log("action item updated");
-      res.status(200).json(end);
+      res.status(200).json({ message: "ok" });
     } else {
-      response.stauts(500);
       console.log("update failed", response.status);
+      res.status(500).json({ message: "Failed to update action item" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
     console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
