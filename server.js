@@ -9,7 +9,9 @@ app.get("/", (req, res) => {
   res.send("Webhook server is running!");
 });
 
-app.post("/incoming-webhook", async (req, res) => {
+// incoming webhook for record deletion
+
+app.post("/data-deletion", async (req, res) => {
   console.log(req.body);
 
   const userEmail = req.body.details.email;
@@ -43,3 +45,38 @@ app.post("/incoming-webhook", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+// incoming webhook for action item update
+
+app.post("/action-item-update", async (req, res) => {
+  console.log(req.body);
+  const actionItemId = req.body.details.id;
+
+  try {
+    const response = await fetch(
+      "https://api.osano.com/v1/subject-rights/requests/" + actionItemId,
+      {
+        method: "PATCH",
+        headers: {
+          osanoApiKey: process.env.x - osano - api - key,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "COMPLETED" }),
+      }
+    );
+    if (response.ok) {
+      console.log("action item updated");
+      res.status(200).json(end);
+    } else {
+      response.stauts(500);
+      console.log("update failed", response.status);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+    console.log("Error:", error);
+  }
+});
+
+// function to Update Osano action item
+
+// check supabase for customer record
