@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
 // incoming dsar webhook with conditional filtering
 app.post("/new-dsar", async (req, res) => {
   console.log(req.body);
@@ -21,7 +22,7 @@ app.post("/new-dsar", async (req, res) => {
   try {
     const result = await userSearch(userEmail);
 
-    if (requestType === "SUMMARY") {
+    if (requestType === "SUMMARIZE") {
       // generate summary file and update item to COMPLETED
       res.status(200).json({ message: "user found, sending summary" });
     } else if (requestType === "DELETE") {
