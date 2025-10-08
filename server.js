@@ -21,6 +21,13 @@ app.post("/data-deletion", async (req, res) => {
   const userEmail = req.body.details.email;
   userSearch(userEmail);
 
+  try {
+    const result = await userSearch(userEmail);
+    res.status(200).json({ message: "ok", result });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
   // try {
   //   const response = await fetch(
   //     "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
@@ -91,27 +98,18 @@ app.post("/action-item-update", async (req, res) => {
   5a. update action item to REJECTED */
 
 const userSearch = async (userEmail) => {
-  try {
-    const response = await fetch(
-      "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
-        userEmail,
-      {
-        method: "GET",
-        headers: {
-          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-        },
-      }
-    );
-
-    if (response.ok) {
-      console.log("User found!", response);
-      res.status(200).json({ message: "ok" });
-    } else {
-      console.log("User not found", response.status);
-      res.status(500).json({ message: "User not found" });
+  const response = await fetch(
+    "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
+      userEmail,
+    {
+      method: "GET",
+      headers: {
+        apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      },
     }
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({ message: "Internal server error" });
+  );
+  if (!response.ok) {
+    throw new Error("User not found");
   }
+  return await response.json;
 };
