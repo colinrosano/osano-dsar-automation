@@ -9,41 +9,42 @@ app.get("/", (req, res) => {
   res.send("Webhook server is running!");
 });
 
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
 // incoming webhook for record deletion
 
 app.post("/data-deletion", async (req, res) => {
   console.log(req.body);
 
   const userEmail = req.body.details.email;
+  userSearch(userEmail);
 
-  try {
-    const response = await fetch(
-      "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
-        userEmail,
-      {
-        method: "DELETE",
-        headers: {
-          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+  // try {
+  //   const response = await fetch(
+  //     "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
+  //       userEmail,
+  //     {
+  //       method: "DELETE",
+  //       headers: {
+  //         apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
 
-    if (response.ok) {
-      console.log("ok");
-      res.status(200).json({ message: "ok" });
-    } else {
-      console.log("Delete failed:", response.status);
-      res.status(500).json({ message: "Delete failed" });
-    }
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  //   if (response.ok) {
+  //     console.log("ok");
+  //     res.status(200).json({ message: "ok" });
+  //   } else {
+  //     console.log("Delete failed:", response.status);
+  //     res.status(500).json({ message: "Delete failed" });
+  //   }
+  // } catch (error) {
+  //   console.log("Error:", error);
+  //   res.status(500).json({ message: "Internal server error" });
+  // }
 });
 
 // incoming webhook for action item update
@@ -51,6 +52,8 @@ app.listen(port, () => {
 app.post("/action-item-update", async (req, res) => {
   console.log(req.body);
   const actionItemId = req.body.details.actionItemId;
+
+  // update osaano action iteam
 
   try {
     const response = await fetch(
@@ -77,6 +80,38 @@ app.post("/action-item-update", async (req, res) => {
   }
 });
 
-// function to Update Osano action item
+/* when new dsar is generated:
+1. webhook to send dsar details
+2. webhook to send appropriate action item details
+3. check db for valid email from dsar details
+4. if email exists
+  4a. delete from db
+  4b. updated action item to COMPLETED
+5. if email does not exist
+  5a. update action item to REJECTED */
 
-// check supabase for customer record
+const userSearch = async (userEmail) => {
+  try {
+    const response = await fetch(
+      "https://xgmfvfsbojvtspztbqaf.supabase.co/rest/v1/users?email=eq." +
+        userEmail,
+      {
+        method: "GET",
+        headers: {
+          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+        },
+      }
+    );
+
+    if (response.ok) {
+      console.log("User found!", response);
+      res.status(200).json({ message: "ok" });
+    } else {
+      console.log("User not found", response.status);
+      res.status(500).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
