@@ -15,7 +15,7 @@ app.listen(port, () => {
 
 // incoming webhook for record deletion
 
-app.post("/data-deletion", async (req, res) => {
+app.post("/new-dsar", async (req, res) => {
   console.log(req.body);
 
   const userEmail = req.body.details.email;
