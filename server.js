@@ -19,7 +19,6 @@ app.post("/data-deletion", async (req, res) => {
   console.log(req.body);
 
   const userEmail = req.body.details.email;
-  userSearch(userEmail);
 
   try {
     const result = await userSearch(userEmail);
@@ -109,9 +108,10 @@ const userSearch = async (userEmail) => {
     }
   );
   if (response.ok) {
-    console.log("User found");
+    const data = await response.json();
+    console.log("User found", data);
+    return data;
   } else {
     throw new Error("User not found");
   }
-  return await response.json;
 };
