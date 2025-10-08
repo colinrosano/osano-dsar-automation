@@ -108,7 +108,9 @@ const userSearch = async (userEmail) => {
       },
     }
   );
-  if (!response.ok) {
+  if (response.ok) {
+    console.log("User found");
+  } else {
     throw new Error("User not found");
   }
   return await response.json;
